@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes"
 import postRoutes from "./routes/post.routes"
 import bookmarkRoutes from "./routes/bookmark.routes";
 import searchRoutes from "./routes/search.routes";
+import commentRoutes from "./routes/comment.routes";
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/posts", postRoutes );
 app.use("/api/v1/posts", bookmarkRoutes);
 app.use("/api/v1/search", searchRoutes);
+app.use("/api/v1", commentRoutes);
 
 
 app.get('/', (req, res) => {
