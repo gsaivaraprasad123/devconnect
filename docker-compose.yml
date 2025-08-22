@@ -7,14 +7,14 @@ services:
       POSTGRES_PASSWORD: Varaprasad123
       POSTGRES_DB: devconnect
     ports:
-      - '5432:5432'
+      - '5434:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
 
   app:
     build: .
     ports:
-      - '3000:3000'
+      - '3004:3000'
     volumes:
       - .:/app
       - /app/node_modules
