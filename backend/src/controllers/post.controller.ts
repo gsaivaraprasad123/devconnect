@@ -21,13 +21,32 @@ export const createPost = async(req: Request, res : Response)=>{
     }
 }
 
-export const getAllPosts = async(_:Request, res: Response) =>{
-    const posts = await prisma.post.findMany({
-        include:{author: {select: {username: true}}},
-        orderBy: {createdAt: "desc"}
-    });
-    res.json(posts);
-}
+// controllers/post.controller.ts
+
+export const getAllPosts = async (req: Request, res: Response) => {
+  const limit = parseInt(req.query.limit as string) || 10;
+  const page = parseInt(req.query.page as string) || 1;
+  const skip = (page - 1) * limit;
+
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({
+      skip,
+      take: limit,
+      include: { author: { select: { id: true, username: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.post.count()
+  ]);
+
+  res.status(200).json({
+    success: true,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    data: posts
+  });
+};
+
 
 export const updatePost = async(req: Request, res: Response) =>{
     const {id} = req.params;
