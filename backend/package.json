@@ -4,9 +4,9 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-  "dev": "tsx server.ts",
-  "start": "tsx server.ts"
-},
+    "dev": "tsx server.ts",
+    "start": "tsx server.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "ioredis": "^5.7.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^6.9.0"
   },
@@ -24,11 +25,13 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/ioredis": "^4.28.10",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.15.30",
+    "@types/node": "^22.17.2",
     "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
   }
 }
