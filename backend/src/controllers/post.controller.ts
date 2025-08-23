@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import redis from "../services/redisClient";
 
 const prisma = new PrismaClient();
 
@@ -28,6 +29,15 @@ export const getAllPosts = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
   const skip = (page - 1) * limit;
 
+  const cacheKey = `posts:limit=${limit}:page=${page}`;
+
+  try {
+    const cached = await redis.get(cacheKey);
+   if (cached) {
+    return res.status(200).json(JSON.parse(cached));
+  }
+
+
   const [posts, total] = await Promise.all([
     prisma.post.findMany({
       skip,
@@ -38,14 +48,22 @@ export const getAllPosts = async (req: Request, res: Response) => {
     prisma.post.count()
   ]);
 
-  res.status(200).json({
-    success: true,
-    total,
-    page,
-    totalPages: Math.ceil(total / limit),
-    data: posts
-  });
-};
+      const response = {
+      success: true,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      data: posts,
+    };
+
+    await redis.set(cacheKey, JSON.stringify(response), "EX", 60);
+
+    res.status(200).json(response);
+}catch(error){
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+}
+}
 
 
 export const updatePost = async(req: Request, res: Response) =>{
